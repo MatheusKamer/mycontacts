@@ -9,7 +9,15 @@ const ContactController = require('./app/controllers/ContactController'); /* Imp
 const router = Router(); /* atribuindo a função Router a uma constante */
 
 /* criando uma rota utilizando a constante router e as funções da classe ContactController */
-router.get('/contacts', ContactController.index);
+router.get(
+  '/contacts',
+  (request, response, next) => { /* Middleware 1 | Utilizando middleware - sempre executam na sequencia que são criandos */
+    request.appId = 'MeuAppID';
+    next();
+  },
+  ContactController.index,
+);
+
 router.get('/contacts/:id', ContactController.show);
 router.delete('/contacts/:id', ContactController.delete);
 
