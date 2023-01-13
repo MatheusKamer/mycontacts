@@ -5,7 +5,10 @@ class ContactsRepository {
     /* Retornando Promise devido ao "await" da função assincrona "index" do ContactController */
     const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
     const rows = await db.query(`
-      SELECT * FROM contacts ORDER BY name ${direction}
+      SELECT co.*, ca.name AS "Nome da categoria"
+      FROM contacts co
+      LEFT JOIN categories ca ON co.category_id = ca.id
+      ORDER BY co.name ${direction}
     `);
 
     return rows;
@@ -14,7 +17,10 @@ class ContactsRepository {
   async findById(id) {
     /* Retornando Promise devido ao "await" da função assincrona "index" do ContactController */
     const [row] = await db.query(`
-      SELECT * FROM contacts WHERE id = $1
+      SELECT co.*, ca.name AS "Nome da categoria"
+      FROM contacts co
+      LEFT JOIN categories ca ON co.category_id = ca.id
+      WHERE co.id = $1
     `, [id]);
 
     return row;
@@ -24,14 +30,6 @@ class ContactsRepository {
     const [row] = await db.query(`
       SELECT * FROM contacts WHERE email = $1
     `, [email]);
-
-    return row;
-  }
-
-  async delete(id) {
-    const [row] = await db.query(`
-      DELETE FROM contacts WHERE id = $1
-    `, [id]);
 
     return row;
   }
@@ -52,10 +50,20 @@ class ContactsRepository {
     name, email, phone, category_id,
   }) {
     const [row] = await db.query(`
-      UPDATE contacts SET name = $1, email = $2, phone = $3, category_id = $4 WHERE id = $5
+      UPDATE contacts
+      SET name = $1, email = $2, phone = $3, category_id = $4 WHERE id = $5
+      RETURNING *
     `, [name, email, phone, category_id, id]);
 
     return row;
+  }
+
+  async delete(id) {
+    const deleteOp = await db.query(`
+      DELETE FROM contacts WHERE id = $1
+    `, [id]);
+
+    return deleteOp;
   }
 }
 
