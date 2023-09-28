@@ -1,7 +1,3 @@
-/* importação utilizada inicialmente
-const express = require('express');
-*/
-
 const { Router } = require('express'); /* Importação desestruturada, importando a função "Router" diretamente do 'express' */
 
 const ContactController = require('./app/controllers/ContactController'); /* Importando a classe ContactController */

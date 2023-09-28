@@ -5,7 +5,7 @@ class ContactsRepository {
     /* Retornando Promise devido ao "await" da função assincrona "index" do ContactController */
     const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
     const rows = await db.query(`
-      SELECT co.*, ca.name AS "Nome da categoria"
+      SELECT co.*, ca.name AS "category_name"
       FROM contacts co
       LEFT JOIN categories ca ON co.category_id = ca.id
       ORDER BY co.name ${direction}
