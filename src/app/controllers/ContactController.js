@@ -18,7 +18,7 @@ class ContactController {
       return response.status(404).json({ error: 'User not found' });
     }
 
-    response.json(contact);
+    return response.json(contact);
   }
 
   async store(request, response) { /* Criar novo registro (estilo create) */
@@ -40,7 +40,7 @@ class ContactController {
       name, email, phone, category_id,
     });
 
-    response.json(contact);
+    response.status(201).json(contact);
   }
 
   async update(request, response) { /* Editar um registro */
